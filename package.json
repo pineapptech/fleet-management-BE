@@ -5,7 +5,7 @@
     "scripts": {
         "start": "node dist/index.js",
         "dev": "nodemon src/index.ts",
-        "build": "npm install && tsc -p . && cp -r package.json ./dist"
+        "build": "tsc -p ."
     },
     "author": "",
     "license": "ISC",
