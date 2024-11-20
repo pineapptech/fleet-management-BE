@@ -1,50 +1,35 @@
+import cloudinary from "../config/cloudinary.config";
+import IAllocate from "../interfaces/allocate.interface";
+import fs from 'fs'
+import Allocate from "../models/allocate.model";
+import { generateVehicleID } from "../utils/generateVehicleID";
 
-import IVehicle from '../interfaces/vehicle.interface';
-import Allocate from '../models/allocate.model';
-import cloudinary from '../config/cloudinary.config';
+export class AllocateUploadService {
 
+    public async uploadFile(file: Express.Multer.File, data: Partial<IAllocate>): Promise<IAllocate> { 
+        console.log(file);
+        
+        try {
+            const result = await cloudinary.uploader.upload(file.path, {folder: 'allocate'})
 
-interface CloudinaryUploadResult {
-    secure_url: string;
-    public_id: string;
-    [key: string]: any;
-}
+            fs.unlinkSync(file.path)
+            const vehicle_id = generateVehicleID()
+            const upload = await Allocate.create({
+                vehicle_id,
+                ...data,
+                recipient_img_id: result.secure_url
+            });
 
-export class AllocateVehicleService {
-    allocateVehicleService = async (file: { [fieldname: string]: Express.Multer.File }, otherData: Partial<IVehicle>) => {
-        if (!file) {
-            throw new Error('Please provide the image of the recipient.');
+            return upload
+        } catch (error) {
+            if (file.path && fs.existsSync(file.path)) {
+                fs.unlinkSync(file.path)
+            }
+            throw error
         }
+    }
 
-        if (!otherData) {
-            throw new Error('Each field is required.');
-        }
-
-       const allocate = await new Promise<CloudinaryUploadResult>((resolve, reject) => {
-           const stream = cloudinary.uploader.upload_stream({ folder: 'allocate' }, (err, data) => {
-               if (err) {
-                   console.error('Cloudinary upload error:', err); // Log actual Cloudinary error
-                   reject(new Error(`Cloudinary error: ${err.message}`));
-               } else {
-                   console.log('Cloudinary upload successful:', data); // Log success response
-                   resolve(data as CloudinaryUploadResult);
-               }
-           });
-           if (!file.buffer) {
-               console.error('File buffer is empty');
-               reject(new Error('File buffer is empty or invalid'));
-           }
-           stream.end(file.buffer);
-       });
-
-
-        const allocated = await Allocate.create({
-            ...otherData,
-            recipient_img_id: allocate.secure_url,
-        });
-
-        return allocated; // Return the created record
-    };
+    public async getAllocateVehicle(): Promise<IAllocate[]>{
+        return await Allocate.find()
+    }
 }
-
-

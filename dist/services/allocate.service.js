@@ -12,38 +12,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AllocateVehicleService = void 0;
-const allocate_model_1 = __importDefault(require("../models/allocate.model"));
+exports.AllocateUploadService = void 0;
 const cloudinary_config_1 = __importDefault(require("../config/cloudinary.config"));
-class AllocateVehicleService {
-    constructor() {
-        this.allocateVehicleService = (file, otherData) => __awaiter(this, void 0, void 0, function* () {
-            if (!file) {
-                throw new Error('Please provide the image of the recipient.');
+const fs_1 = __importDefault(require("fs"));
+const allocate_model_1 = __importDefault(require("../models/allocate.model"));
+const generateVehicleID_1 = require("../utils/generateVehicleID");
+class AllocateUploadService {
+    uploadFile(file, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log(file);
+            try {
+                const result = yield cloudinary_config_1.default.uploader.upload(file.path, { folder: 'allocate' });
+                fs_1.default.unlinkSync(file.path);
+                const vehicle_id = (0, generateVehicleID_1.generateVehicleID)();
+                const upload = yield allocate_model_1.default.create(Object.assign(Object.assign({ vehicle_id }, data), { recipient_img_id: result.secure_url }));
+                return upload;
             }
-            if (!otherData) {
-                throw new Error('Each field is required.');
-            }
-            const allocate = yield new Promise((resolve, reject) => {
-                const stream = cloudinary_config_1.default.uploader.upload_stream({ folder: 'allocate' }, (err, data) => {
-                    if (err) {
-                        console.error('Cloudinary upload error:', err); // Log actual Cloudinary error
-                        reject(new Error(`Cloudinary error: ${err.message}`));
-                    }
-                    else {
-                        console.log('Cloudinary upload successful:', data); // Log success response
-                        resolve(data);
-                    }
-                });
-                if (!file.buffer) {
-                    console.error('File buffer is empty');
-                    reject(new Error('File buffer is empty or invalid'));
+            catch (error) {
+                if (file.path && fs_1.default.existsSync(file.path)) {
+                    fs_1.default.unlinkSync(file.path);
                 }
-                stream.end(file.buffer);
-            });
-            const allocated = yield allocate_model_1.default.create(Object.assign(Object.assign({}, otherData), { recipient_img_id: allocate.secure_url }));
-            return allocated; // Return the created record
+                throw error;
+            }
+        });
+    }
+    getAllocateVehicle() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield allocate_model_1.default.find();
         });
     }
 }
-exports.AllocateVehicleService = AllocateVehicleService;
+exports.AllocateUploadService = AllocateUploadService;

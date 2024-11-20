@@ -4,16 +4,18 @@ const mongoose_1 = require("mongoose");
 const vehicleSchema = new mongoose_1.Schema({
     image: {
         type: String,
-        trim: true
+        trim: true,
+        required: [true, '{PATH} is required']
     },
     procurement_img: {
         type: String,
-        trim: true
-    },
-    vehicle_id: {
-        type: String,
         trim: true,
         required: [true, '{PATH} is required']
+    },
+    vehicle_id: {
+        // generated programatically
+        type: String,
+        trim: true
     },
     plate_number: {
         type: String,

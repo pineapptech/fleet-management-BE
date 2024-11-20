@@ -1,4 +1,4 @@
-import { AllocateUploadController } from './../controllers/allocated.controller';
+import { AllocateUploadController } from '../controllers/allocate.controller';
 import { Router } from "express";
 import multerMiddleware from '../middlewares/multer.middleware';
 

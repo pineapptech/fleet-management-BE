@@ -9,36 +9,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AllocateUploadController = void 0;
 const allocate_service_1 = require("../services/allocate.service");
-class AllocateVehicleController {
+class AllocateUploadController {
     constructor() {
-        this.allocateVehicle = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+        this.upload = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                // Extract the file and otherData from the request
-                const file = req.file;
-                const otherData = req.body;
-                // Validate file existence
-                if (!file || !file.buffer) {
-                    res.status(400).json({ message: 'File buffer is empty or file not provided.' });
+                if (!req.file) {
+                    res.status(400).json({
+                        status: false,
+                        message: 'No file to Upload'
+                    });
                     return;
                 }
-                // Call the service to allocate the vehicle
-                const allocated = yield this.allocateVehicleService.allocateVehicleService({ [file.fieldname]: file }, otherData);
+                const data = req.body;
+                if (!data) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'All Fields are required'
+                    });
+                    return;
+                }
+                const result = yield this.allocateUploadService.uploadFile(req.file, data);
                 res.status(201).json({
-                    message: 'Vehicle allocation successful.',
-                    data: allocated.recipient_id_type
+                    status: true,
+                    message: 'Vehicle successfully allocated'
                 });
-                return;
             }
             catch (error) {
-                console.error('Error in allocateVehicle:', error);
                 res.status(500).json({
-                    message: 'Failed to allocate vehicle.',
-                    error: error.message
+                    status: false,
+                    message: 'Error while allocating Vehicle',
+                    details: error instanceof Error ? error.message : 'Unknown error'
                 });
             }
         });
-        this.allocateVehicleService = new allocate_service_1.AllocateVehicleService();
+        this.getAllocatedVehicle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const uploads = yield this.allocateUploadService.getAllocateVehicle();
+                res.status(200).json(uploads);
+            }
+            catch (error) {
+                res.status(500).json({
+                    error: 'Failed to fetch uploads',
+                    details: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
+        this.allocateUploadService = new allocate_service_1.AllocateUploadService();
     }
 }
-exports.default = AllocateVehicleController;
+exports.AllocateUploadController = AllocateUploadController;

@@ -24,6 +24,9 @@ const userSchema = new mongoose_1.Schema({
         enum: Object.values(user_interface_1.Erole),
         default: user_interface_1.Erole.user
     }
+}, {
+    timestamps: true,
+    versionKey: false
 });
 const User = (0, mongoose_1.model)('User', userSchema);
 exports.default = User;

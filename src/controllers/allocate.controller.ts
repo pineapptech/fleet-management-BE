@@ -1,46 +1,64 @@
-import { NextFunction, Request, Response } from 'express';
-import { AllocateVehicleService } from '../services/allocate.service';
+import { Request, Response } from "express";
+import { AllocateUploadService } from "../services/allocate.service";
 
 
-class AllocateVehicleController {
-    private allocateVehicleService: AllocateVehicleService;
+
+interface CustomRequest extends Request {
+    file?: Express.Multer.File;
+}
+export class AllocateUploadController {
+    private allocateUploadService: AllocateUploadService;
 
     constructor() {
-        this.allocateVehicleService = new AllocateVehicleService();
+        this.allocateUploadService = new AllocateUploadService();
     }
 
-    allocateVehicle = async (req: Request, res: Response, next:NextFunction)=> {
+    public upload = async (req: CustomRequest, res: Response): Promise<void> => { 
+
         try {
-            // Extract the file and otherData from the request
-            const file = req.file; 
-            const otherData = req.body;
             
+            if (!req.file) {
+                res.status(400).json({
+                    status: false,
+                    message: 'No file to Upload'
+                })
+                return
+            }
 
+            const data = req.body;
+            if (!data) {
+                res.status(404).json({
+                    status: false,
+                    message: 'All Fields are required'
+                })  
+                return 
+            }
 
-            // Validate file existence
-           if (!file || !file.buffer) {
-               res.status(400).json({ message: 'File buffer is empty or file not provided.' });
-               return;
-           }
+            const result = await this.allocateUploadService.uploadFile(req.file!, data);
+            res.status(201).json({
+                status: true,
+                message: 'Vehicle successfully allocated'
+            })
 
-            // Call the service to allocate the vehicle
-            const allocated = await this.allocateVehicleService.allocateVehicleService({ [file.fieldname]: file }, otherData);
-
-            
-            
-              res.status(201).json({
-                 message: 'Vehicle allocation successful.',
-                 data: allocated.recipient_id_type
-              });
-            return 
-        } catch (error: unknown | any) {
-            console.error('Error in allocateVehicle:', error);
-             res.status(500).json({
-                message: 'Failed to allocate vehicle.',
-                error: error.message
+        } catch (error) {
+            res.status(500).json({
+                status: false,
+                message: 'Error while allocating Vehicle',
+                details: error instanceof Error ? error.message : 'Unknown error'
             });
         }
-    };
-}
+    }
 
-export default AllocateVehicleController;
+
+    public getAllocatedVehicle = async (req: Request, res: Response): Promise<void> => { 
+        try {
+            const uploads = await this.allocateUploadService.getAllocateVehicle();
+            res.status(200).json(uploads)
+        } catch (error) {
+            res.status(500).json({
+                error: 'Failed to fetch uploads',
+                details: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    }
+}

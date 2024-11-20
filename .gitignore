@@ -2,3 +2,5 @@
 /node_modules
 
 /src/services/test.service
+src/services/allocates.service
+src/controllers/allocates.controller

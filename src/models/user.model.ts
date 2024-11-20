@@ -23,6 +23,9 @@ const userSchema = new Schema<IUser>({
         enum: Object.values(Erole),
         default: Erole.user
     }
+}, {
+    timestamps: true,
+    versionKey: false
 })
 
 const User = model<IUser>('User', userSchema);
