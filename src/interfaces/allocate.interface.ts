@@ -1,12 +1,7 @@
-import { Document } from "mongoose";
+import { Document } from 'mongoose';
+import { BaseAllocation } from './base.interface';
 
-interface IAllocate extends Document{
-    vehicle_id: string;
-    plate_number: string;
-    vehicle_type: string;
-    vehicle_color: string;
-    vehicle_model: string;
-    engine_number: string;
+interface IAllocate extends BaseAllocation, Document {
     name_of_recipient: string;
     position_of_recipient: string;
     date_of_allocation: string;
@@ -15,7 +10,5 @@ interface IAllocate extends Document{
     recipient_img_id: string; // image url
     vehicle_status: string;
     vehicle_particulars_status: string;
-    responsible_officer: string;
 }
-
-export default IAllocate
+export default IAllocate;

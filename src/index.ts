@@ -8,6 +8,7 @@ import vehicleRoute from './routes/vehicle.route';
 import { globalError } from './middlewares/global-error.middleware';
 import allocatedRouter from './routes/allocated.route';
 import maintenanceRoute from './routes/maintenance.route';
+import assignedRouter from './routes/assign.route';
 
 configDotenv();
 connectDB();
@@ -23,6 +24,7 @@ app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/vehicle', vehicleRoute);
 app.use('/api/v1/allocation', allocatedRouter);
 app.use('/api/v1/maintainers', maintenanceRoute);
+app.use('/api/v1/assigned', assignedRouter);
 
 app.use(globalError);
 app.listen(port, () => console.log(`Listening on ${port}`));
