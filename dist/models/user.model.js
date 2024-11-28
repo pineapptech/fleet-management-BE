@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const user_interface_1 = require("../interfaces/user.interface");
 const userSchema = new mongoose_1.Schema({
-    fullname: {
-        type: String,
-        trim: true
-    },
     email: {
+        type: String,
+        trim: true,
+        unique: true
+    },
+    phone: {
         type: String,
         trim: true
     },

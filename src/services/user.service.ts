@@ -4,12 +4,12 @@ import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 class UserService {
     async createUserService(data: IUser): Promise<IUser> {
-        const { fullname, email, password, confirmPassword, role } = data;
+        const { email, phone, password, confirmPassword, role } = data;
         if (password !== confirmPassword) {
             throw new Error('Password does not match');
         }
         const hashPassword = bcrypt.hashSync(password, 10);
-        return await User.create({ fullname, email, password: hashPassword, role }).then((user) => {
+        return await User.create({ phone, email, password: hashPassword, role }).then((user) => {
             return user;
         });
     }

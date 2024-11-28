@@ -8,4 +8,5 @@ const multer_middleware_1 = __importDefault(require("../middlewares/multer.middl
 const maintenance_controller_1 = __importDefault(require("../controllers/maintenance.controller"));
 const maintenanceRoute = (0, express_1.Router)();
 maintenanceRoute.route('/maintenance-record').post(multer_middleware_1.default.upload.single('invoice_img_url'), maintenance_controller_1.default.createMaintenance);
+maintenanceRoute.route('/maintenance-record').get(maintenance_controller_1.default.getAllMaintenedVehicles);
 exports.default = maintenanceRoute;

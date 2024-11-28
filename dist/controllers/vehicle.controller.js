@@ -39,6 +39,30 @@ class VehicleController {
                 }
             }));
         });
+        this.getVehicles = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const vehicle = yield this.vehicleService.getVehicles();
+                if (vehicle.length === 0) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'No Vehicle Found, Please upload Vehicle to the Invetory...'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    length: vehicle.length,
+                    data: vehicle
+                });
+            }
+            catch (error) {
+                res.status(500).json({
+                    status: false,
+                    message: error.message,
+                    stack: process.env.NODE_ENV !== 'production' ? JSON.stringify(error.stack) : ''
+                });
+            }
+        });
         this.vehicleService = new vehicle_service_1.VehicleService();
     }
 }

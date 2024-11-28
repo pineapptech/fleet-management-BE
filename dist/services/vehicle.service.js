@@ -23,6 +23,17 @@ cloudinary_1.v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 class VehicleService {
+    constructor() {
+        this.getVehicles = () => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const vehicles = yield vehicle_model_1.default.find();
+                return vehicles;
+            }
+            catch (error) {
+                throw new Error(`${error.message}`);
+            }
+        });
+    }
     // Helper function to validate files
     validateFiles(files) {
         if (!files || !files.vehicle_img || !files.vehicle_img[0]) {

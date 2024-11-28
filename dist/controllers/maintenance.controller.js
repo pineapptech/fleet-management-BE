@@ -47,6 +47,30 @@ class MaintenanceController {
                 });
             }
         });
+        this.getAllMaintenedVehicles = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const allMaintenedVehicles = yield this.maintenanceService.getVehicleMaintenence();
+                if (allMaintenedVehicles.length === 0) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'No Record of Maintained Vehicle Found...'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    length: allMaintenedVehicles.length,
+                    data: allMaintenedVehicles
+                });
+            }
+            catch (error) {
+                res.status(500).json({
+                    status: false,
+                    message: error.message,
+                    stack: process.env.NODE_ENV !== 'production' ? JSON.stringify(error.stack) : ''
+                });
+            }
+        });
         this.maintenanceService = new maintenance_service_1.default();
     }
 }

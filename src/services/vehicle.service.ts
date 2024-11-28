@@ -40,8 +40,8 @@ export class VehicleService {
             // Validate files before proceeding
             this.validateFiles(files);
 
-            if (!vehicleData){
-                throw new Error('All othr Vehicle Data are needed...')
+            if (!vehicleData) {
+                throw new Error('All othr Vehicle Data are needed...');
             }
 
             // Upload images to Cloudinary
@@ -61,4 +61,13 @@ export class VehicleService {
             throw new Error(`${error.message}`);
         }
     }
+
+    public getVehicles = async (): Promise<IVehicle[]> => {
+        try {
+            const vehicles = await Vehicle.find();
+            return vehicles;
+        } catch (error: any) {
+            throw new Error(`${error.message}`);
+        }
+    };
 }

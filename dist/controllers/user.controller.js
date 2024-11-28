@@ -13,20 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("../services/user.service"));
+const user_validation_utils_1 = require("../utils/user-validation.utils");
+const organization_service_1 = __importDefault(require("../services/organization.service"));
 class UserController {
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fullname, email, password, confirmPassword, role } = req.body;
             try {
-                if (!fullname || !email || !password || !confirmPassword) {
-                    res.status(400).json({
-                        status: false,
-                        message: 'All fields are required'
-                    });
-                    return;
-                }
+                // Use Joi validation to validate incoming request body
+                const validatedData = user_validation_utils_1.UserValidation.validate(req.body);
+                const validatedOrgData = user_validation_utils_1.UserValidation.validate(req.body, user_validation_utils_1.UserValidation.organizationSchema);
+                const file = req.file;
                 // check if user already exists in the database
-                const emailExists = yield user_service_1.default.checkUserEmailExists(email);
+                const emailExists = yield user_service_1.default.checkUserEmailExists(validatedData.email);
                 if (emailExists) {
                     res.status(400).json({
                         status: false,
@@ -34,38 +32,38 @@ class UserController {
                     });
                     return;
                 }
-                if (password.length < 6) {
-                    res.status(400).json({
-                        status: false,
-                        message: 'Password must be at least 6 characters'
-                    });
-                    return;
-                }
                 // const user_data: IUser = req.body;
-                yield user_service_1.default.createUserService(req.body).then((user) => {
-                    return res.status(200).json({
-                        status: true,
-                        message: 'User created successfully',
-                        user
-                    });
-                });
-                // // check if email password and confirm password matches
-                // // if (password !== confirmPassword) {
-                // //      res.status(400).json({
-                // //         status: false,
-                // //         message: 'Sorry, But your password does not match'
-                // //     });
-                // // }
-                // // const user_data: IUser = req.body
-                // await userService.createUserService(req.body).then((user: IUser) => {
+                // await userService.createUserService(validatedData).then((user: IUser) => {
                 //     return res.status(200).json({
                 //         status: true,
                 //         message: 'User created successfully',
-                //         user
+                //         user: user.email
                 //     });
-                // })
+                // });
+                const user = yield user_service_1.default.createUserService(validatedData);
+                const org = yield organization_service_1.default.createSerivce(file, validatedOrgData);
+                if (!user && !org) {
+                    res.status(401).json({
+                        status: false,
+                        message: 'User and Organization creation failed'
+                    });
+                    return;
+                }
+                res.status(201).json({
+                    status: true,
+                    message: `User with this email: ${user.email} and Organization ${org.name} created successfully`
+                });
             }
             catch (error) {
+                if (error instanceof user_validation_utils_1.ValidationError) {
+                    res.status(406).json({
+                        status: false,
+                        message: 'Validation Failed',
+                        errors: error.errors,
+                        name: error.name
+                    });
+                    return;
+                }
                 res.status(500).json({
                     status: false,
                     message: 'Error: =>' + error.message,
@@ -91,7 +89,7 @@ class UserController {
                     data: [
                         {
                             token,
-                            fullname: user.fullname,
+                            email: user.email
                         }
                     ]
                 });

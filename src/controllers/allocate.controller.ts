@@ -1,7 +1,5 @@
-import { Request, Response } from "express";
-import { AllocateUploadService } from "../services/allocate.service";
-
-
+import { Request, Response } from 'express';
+import { AllocateUploadService } from '../services/allocate.service';
 
 interface CustomRequest extends Request {
     file?: Express.Multer.File;
@@ -13,16 +11,14 @@ export class AllocateUploadController {
         this.allocateUploadService = new AllocateUploadService();
     }
 
-    public upload = async (req: CustomRequest, res: Response): Promise<void> => { 
-
+    public upload = async (req: CustomRequest, res: Response): Promise<void> => {
         try {
-            
             if (!req.file) {
                 res.status(400).json({
                     status: false,
                     message: 'No file to Upload'
-                })
-                return
+                });
+                return;
             }
 
             const data = req.body;
@@ -30,16 +26,15 @@ export class AllocateUploadController {
                 res.status(404).json({
                     status: false,
                     message: 'All Fields are required'
-                })  
-                return 
+                });
+                return;
             }
 
             const result = await this.allocateUploadService.uploadFile(req.file!, data);
             res.status(201).json({
                 status: true,
                 message: 'Vehicle successfully allocated'
-            })
-
+            });
         } catch (error) {
             res.status(500).json({
                 status: false,
@@ -47,18 +42,28 @@ export class AllocateUploadController {
                 details: error instanceof Error ? error.message : 'Unknown error'
             });
         }
-    }
+    };
 
-
-    public getAllocatedVehicle = async (req: Request, res: Response): Promise<void> => { 
+    public getAllocatedVehicle = async (req: Request, res: Response): Promise<void> => {
         try {
             const uploads = await this.allocateUploadService.getAllocateVehicle();
-            res.status(200).json(uploads)
+            if (uploads.length === 0) {
+                res.status(404).json({
+                    status: false,
+                    message: 'No Vehicle have been allocated..'
+                });
+                return;
+            }
+            res.status(200).json({
+                status: true,
+                length: uploads.length,
+                data: uploads
+            });
         } catch (error) {
             res.status(500).json({
                 error: 'Failed to fetch uploads',
                 details: error instanceof Error ? error.message : 'Unknown error'
             });
         }
-    }
+    };
 }

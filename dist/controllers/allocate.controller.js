@@ -47,7 +47,18 @@ class AllocateUploadController {
         this.getAllocatedVehicle = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const uploads = yield this.allocateUploadService.getAllocateVehicle();
-                res.status(200).json(uploads);
+                if (uploads.length === 0) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'No Vehicle have been allocated..'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    length: uploads.length,
+                    data: uploads
+                });
             }
             catch (error) {
                 res.status(500).json({

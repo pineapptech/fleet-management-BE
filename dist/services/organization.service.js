@@ -14,18 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cloudinary_config_1 = __importDefault(require("../config/cloudinary.config"));
 const fs_1 = __importDefault(require("fs"));
-const maintenance_model_1 = __importDefault(require("../models/maintenance.model"));
-const generateVehicleID_1 = require("../utils/generateVehicleID");
-class MaintenanceService {
+const organization_model_1 = __importDefault(require("../models/organization.model"));
+class OrganizationService {
     constructor() {
-        this.createMaintenance = (file, data) => __awaiter(this, void 0, void 0, function* () {
+        this.createSerivce = (file, organization) => __awaiter(this, void 0, void 0, function* () {
+            console.log(file);
             try {
-                const result = yield cloudinary_config_1.default.uploader.upload(file.path, { folder: 'maintenance' });
-                process.env.NODE_ENV !== 'production' ? console.log(result) : '';
+                const result = yield cloudinary_config_1.default.uploader.upload(file.path, { folder: 'organization' });
                 fs_1.default.unlinkSync(file.path);
-                const vehicle_id = (0, generateVehicleID_1.generateVehicleID)();
-                console.log(vehicle_id);
-                const upload = maintenance_model_1.default.create(Object.assign(Object.assign({ vehicle_id }, data), { invoice_img_url: result.secure_url }));
+                const upload = yield organization_model_1.default.create(Object.assign(Object.assign({}, organization), { logoImgUrl: result.secure_url }));
                 return upload;
             }
             catch (error) {
@@ -35,15 +32,6 @@ class MaintenanceService {
                 throw error;
             }
         });
-        this.getVehicleMaintenence = () => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const maintainedVehicle = yield maintenance_model_1.default.find();
-                return maintainedVehicle;
-            }
-            catch (error) {
-                throw new Error(`${error.message}`);
-            }
-        });
     }
 }
-exports.default = MaintenanceService;
+exports.default = new OrganizationService();

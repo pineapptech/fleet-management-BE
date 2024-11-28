@@ -8,4 +8,5 @@ const vehicle_controller_1 = require("../controllers/vehicle.controller");
 const vehicleRoute = express_1.default.Router();
 const vehicleController = new vehicle_controller_1.VehicleController();
 vehicleRoute.route('/add-vehicle').post(vehicleController.uploadVehicleData);
+vehicleRoute.route('/vehicle-record').get(vehicleController.getVehicles);
 exports.default = vehicleRoute;

@@ -8,5 +8,5 @@ const express_1 = require("express");
 const multer_middleware_1 = __importDefault(require("../middlewares/multer.middleware"));
 const allocatedRouter = (0, express_1.Router)();
 const allocatedUploadController = new allocate_controller_1.AllocateUploadController();
-allocatedRouter.route('/allocate').post(multer_middleware_1.default.upload.single('recipient_img_id'), allocatedUploadController.upload);
+allocatedRouter.route('/allocate').post(multer_middleware_1.default.upload.single('recipient_img_id'), allocatedUploadController.upload).get(allocatedUploadController.getAllocatedVehicle);
 exports.default = allocatedRouter;

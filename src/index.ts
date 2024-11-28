@@ -9,6 +9,7 @@ import { globalError } from './middlewares/global-error.middleware';
 import allocatedRouter from './routes/allocated.route';
 import maintenanceRoute from './routes/maintenance.route';
 import assignedRouter from './routes/assign.route';
+import cors from 'cors';
 
 configDotenv();
 connectDB();
@@ -16,6 +17,7 @@ const app: Application = express();
 
 app.use(morgan('tiny'));
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;

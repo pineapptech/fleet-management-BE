@@ -18,12 +18,12 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserService {
     createUserService(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fullname, email, password, confirmPassword, role } = data;
+            const { email, phone, password, confirmPassword, role } = data;
             if (password !== confirmPassword) {
                 throw new Error('Password does not match');
             }
             const hashPassword = bcryptjs_1.default.hashSync(password, 10);
-            return yield user_model_1.default.create({ fullname, email, password: hashPassword, role }).then((user) => {
+            return yield user_model_1.default.create({ phone, email, password: hashPassword, role }).then((user) => {
                 return user;
             });
         });

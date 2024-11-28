@@ -49,6 +49,30 @@ class AssignController {
             });
         }
     };
+
+    public getAllAssignedVehicles = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const assignedVehicles = await this.assignService.getAllAssignedVehicles();
+            if (assignedVehicles.length === 0) {
+                res.status(404).json({
+                    status: false,
+                    message: 'No Vehicle has Been Assigned Yet...'
+                });
+                return;
+            }
+            res.status(200).json({
+                status: true,
+                length: assignedVehicles.length,
+                data: assignedVehicles
+            });
+        } catch (error: any) {
+            res.status(500).json({
+                status: false,
+                message: error.message,
+                stack: process.env.NODE_ENV !== 'production' ? JSON.stringify(error.stack) : ''
+            });
+        }
+    };
 }
 
 export default new AssignController();
