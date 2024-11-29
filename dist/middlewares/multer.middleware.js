@@ -10,12 +10,12 @@ class UploadMiddleWare {
         this.storage = multer_1.default.diskStorage({
             destination: './uploads/',
             filename: (req, file, cb) => {
-                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
                 cb(null, file.fieldname + '-' + uniqueSuffix + path_1.default.extname(file.originalname));
             }
         });
         this.fileFilter = (req, file, cb) => {
-            const allowedMimes = ['image/png', 'image/png'];
+            const allowedMimes = ['image/png', 'image/jpg', 'image/jpeg'];
             if (allowedMimes.includes(file.mimetype)) {
                 cb(null, true);
             }
