@@ -30,11 +30,8 @@ class UserService {
         if (!validPassword) {
             throw new Error(`Email or Password is Incorrect`);
         }
-        const token = jwt.sign({ id: user._id, email: user.email }, String(process.env.SECRET_KEY), { expiresIn: '30d' });
 
-        console.log(token);
-
-        return { token, user };
+        return user;
     }
 }
 

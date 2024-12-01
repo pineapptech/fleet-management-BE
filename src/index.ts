@@ -10,6 +10,8 @@ import allocatedRouter from './routes/allocated.route';
 import maintenanceRoute from './routes/maintenance.route';
 import assignedRouter from './routes/assign.route';
 import cors from 'cors';
+import orgRouter from './routes/organization.route';
+import cookieParser from 'cookie-parser';
 
 configDotenv();
 connectDB();
@@ -18,6 +20,7 @@ const app: Application = express();
 app.use(morgan('tiny'));
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 3000;
@@ -27,6 +30,7 @@ app.use('/api/v1/vehicle', vehicleRoute);
 app.use('/api/v1/allocation', allocatedRouter);
 app.use('/api/v1/maintainers', maintenanceRoute);
 app.use('/api/v1/assigned', assignedRouter);
+app.use('/api/v1/organizations', orgRouter);
 
 app.use(globalError);
 app.listen(port, () => console.log(`Listening on ${port}`));

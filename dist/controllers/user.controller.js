@@ -14,15 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("../services/user.service"));
 const user_validation_utils_1 = require("../utils/user-validation.utils");
-const organization_service_1 = __importDefault(require("../services/organization.service"));
+const generateToken_1 = __importDefault(require("../utils/generateToken"));
+const console_1 = require("console");
 class UserController {
+    constructor() {
+        this.logout = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            res.cookie('jwt', '', {
+                httpOnly: true,
+                expires: new Date(0)
+            });
+            res.status(200).json({
+                status: true,
+                message: 'You have Successfully logged out'
+            });
+        });
+    }
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // Use Joi validation to validate incoming request body
                 const validatedData = user_validation_utils_1.UserValidation.validate(req.body);
-                const validatedOrgData = user_validation_utils_1.UserValidation.validate(req.body, user_validation_utils_1.UserValidation.organizationSchema);
-                const file = req.file;
+                // const validatedOrgData = UserValidation.validate(req.body, UserValidation.organizationSchema);
+                // const file = req.file;
                 // check if user already exists in the database
                 const emailExists = yield user_service_1.default.checkUserEmailExists(validatedData.email);
                 if (emailExists) {
@@ -41,8 +54,8 @@ class UserController {
                 //     });
                 // });
                 const user = yield user_service_1.default.createUserService(validatedData);
-                const org = yield organization_service_1.default.createSerivce(file, validatedOrgData);
-                if (!user && !org) {
+                // const org = await organizationService.createSerivce(file!, validatedOrgData);
+                if (!user) {
                     res.status(401).json({
                         status: false,
                         message: 'User and Organization creation failed'
@@ -51,7 +64,8 @@ class UserController {
                 }
                 res.status(201).json({
                     status: true,
-                    message: `User with this email: ${user.email} and Organization ${org.name} created successfully`
+                    message: `User with this email: ${user.email} created successfully`,
+                    id: user._id
                 });
             }
             catch (error) {
@@ -83,12 +97,14 @@ class UserController {
                     });
                     return;
                 }
-                const { token, user } = yield user_service_1.default.loginService(email, password);
+                const user = yield user_service_1.default.loginService(email, password);
+                const userId = user._id.toString();
+                const token = (0, generateToken_1.default)(res, { _id: userId });
+                (0, console_1.log)(token);
                 res.status(200).json({
                     status: true,
                     data: [
                         {
-                            token,
                             email: user.email
                         }
                     ]

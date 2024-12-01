@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_model_1 = __importDefault(require("../models/user.model"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserService {
     createUserService(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -44,9 +43,7 @@ class UserService {
             if (!validPassword) {
                 throw new Error(`Email or Password is Incorrect`);
             }
-            const token = jsonwebtoken_1.default.sign({ id: user._id, email: user.email }, String(process.env.SECRET_KEY), { expiresIn: '30d' });
-            console.log(token);
-            return { token, user };
+            return user;
         });
     }
 }

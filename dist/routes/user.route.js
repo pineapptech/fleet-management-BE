@@ -8,4 +8,5 @@ const user_controller_1 = __importDefault(require("../controllers/user.controlle
 const userRoute = express_1.default.Router();
 userRoute.post('/register', user_controller_1.default.registerUser);
 userRoute.route('/login').post(user_controller_1.default.login);
+userRoute.route('/logout').post(user_controller_1.default.logout);
 exports.default = userRoute;

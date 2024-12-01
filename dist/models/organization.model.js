@@ -1,66 +1,70 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = require("mongoose");
-const organizationSchema = new mongoose_1.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const OrganizationSchema = new mongoose_1.default.Schema({
     name: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Organization name is required'],
+        trim: true
     },
     email: {
         type: String,
-        trim: true,
+        required: [true, 'Organization email is required'],
         unique: true,
-        required: true
+        lowercase: true,
+        trim: true
     },
     type: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Organization type is required']
     },
     phone: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Phone number is required']
     },
     logoImgUrl: {
         type: String,
-        trim: true,
-        required: true
+        default: '' // Optional
     },
     adminFullName: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Admin full name is required']
     },
     addminEmail: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Admin email is required']
     },
     addminRole: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Admin role is required']
     },
     adminPhone: {
         type: String,
-        trim: true,
-        required: true
+        required: [true, 'Admin phone is required']
     },
     numberOfVehicles: {
         type: Number,
-        trim: true,
-        required: true
+        default: 0
     },
     operationalAreas: {
         type: [String],
-        required: true
+        default: []
     },
     vehilceCategories: {
         type: String,
-        required: true
+        default: ''
+    },
+    // Add createdBy field with a reference to User model
+    createdBy: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'User', // Make sure this matches your User model name
+        required: [true, 'Creator of the organization is required']
     }
+}, {
+    timestamps: true // Adds createdAt and updatedAt fields
 });
-const Organization = (0, mongoose_1.model)('organization', organizationSchema);
+const Organization = mongoose_1.default.model('Organization', OrganizationSchema);
 exports.default = Organization;

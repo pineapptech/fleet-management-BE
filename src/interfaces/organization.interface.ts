@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 interface IOrganization extends Document {
     name: string;
@@ -13,6 +13,7 @@ interface IOrganization extends Document {
     numberOfVehicles: number;
     operationalAreas: string[];
     vehilceCategories: string;
+    createdBy: Types.ObjectId;
 }
 
 export default IOrganization;

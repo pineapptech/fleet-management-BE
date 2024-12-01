@@ -1,67 +1,72 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 import IOrganization from '../interfaces/organization.interface';
 
-const organizationSchema = new Schema<IOrganization>({
-    name: {
-        type: String,
-        trim: true,
-        required: true
+const OrganizationSchema = new mongoose.Schema<IOrganization>(
+    {
+        name: {
+            type: String,
+            required: [true, 'Organization name is required'],
+            trim: true
+        },
+        email: {
+            type: String,
+            required: [true, 'Organization email is required'],
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+        type: {
+            type: String,
+            required: [true, 'Organization type is required']
+        },
+        phone: {
+            type: String,
+            required: [true, 'Phone number is required']
+        },
+        logoImgUrl: {
+            type: String,
+            default: '' // Optional
+        },
+        adminFullName: {
+            type: String,
+            required: [true, 'Admin full name is required']
+        },
+        addminEmail: {
+            type: String,
+            required: [true, 'Admin email is required']
+        },
+        addminRole: {
+            type: String,
+            required: [true, 'Admin role is required']
+        },
+        adminPhone: {
+            type: String,
+            required: [true, 'Admin phone is required']
+        },
+        numberOfVehicles: {
+            type: Number,
+            default: 0
+        },
+        operationalAreas: {
+            type: [String],
+            default: []
+        },
+        vehilceCategories: {
+            type: String,
+            default: ''
+        },
+        // Add createdBy field with a reference to User model
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // Make sure this matches your User model name
+            required: [true, 'Creator of the organization is required']
+        }
     },
-    email: {
-        type: String,
-        trim: true,
-        unique: true,
-        required: true
-    },
-    type: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    phone: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    logoImgUrl: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    adminFullName: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    addminEmail: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    addminRole: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    adminPhone: {
-        type: String,
-        trim: true,
-        required: true
-    },
-    numberOfVehicles: {
-        type: Number,
-        trim: true,
-        required: true
-    },
-    operationalAreas: {
-        type: [String],
-        required: true
-    },
-    vehilceCategories: {
-        type: String,
-        required: true
+    {
+        timestamps: true // Adds createdAt and updatedAt fields
     }
-});
+);
 
-const Organization = model<IOrganization>('organization', organizationSchema);
+const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);
+
 export default Organization;
