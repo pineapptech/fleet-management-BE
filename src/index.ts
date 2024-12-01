@@ -12,14 +12,21 @@ import assignedRouter from './routes/assign.route';
 import cors from 'cors';
 import orgRouter from './routes/organization.route';
 import cookieParser from 'cookie-parser';
+import procurementRouter from './routes/procurement.route';
 
 configDotenv();
 connectDB();
+
+const corsOptions = {
+    origin: 'https://fleet-management-fe.vercel.app', // Replace with your frontend domain
+    credentials: true,
+    optionsSuccessStatus: 200
+};
 const app: Application = express();
 
 app.use(morgan('tiny'));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +38,7 @@ app.use('/api/v1/allocation', allocatedRouter);
 app.use('/api/v1/maintainers', maintenanceRoute);
 app.use('/api/v1/assigned', assignedRouter);
 app.use('/api/v1/organizations', orgRouter);
+app.use('/api/v1/procurement', procurementRouter);
 
 app.use(globalError);
 app.listen(port, () => console.log(`Listening on ${port}`));

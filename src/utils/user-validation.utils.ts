@@ -40,6 +40,46 @@ class UserValidation {
         })
     });
 
+    static procurementSchema = Joi.object({
+        orderNumber: Joi.string().trim().optional(), // Since it's not marked as required in the original schema
+
+        procurementType: Joi.string().trim().required().messages({
+            'string.empty': 'Procurement type is required',
+            'any.required': 'Procurement type is required'
+        }),
+
+        vendorName: Joi.string().trim().required().messages({
+            'string.empty': 'Vendor name is required',
+            'any.required': 'Vendor name is required'
+        }),
+
+        description: Joi.string().trim().required().messages({
+            'string.empty': 'Description is required',
+            'any.required': 'Description is required'
+        }),
+
+        quantity: Joi.number().integer().min(1).required().messages({
+            'number.base': 'Quantity must be a number',
+            'number.integer': 'Quantity must be a whole number',
+            'number.min': 'Quantity must be at least 1',
+            'any.required': 'Quantity is required'
+        }),
+
+        deliveryDate: Joi.date().iso().optional(), // Optional as it was not marked as required in original schema
+
+        budget: Joi.number().min(0).required().messages({
+            'number.base': 'Budget must be a number',
+            'number.min': 'Budget cannot be negative',
+            'any.required': 'Budget is required'
+        }),
+
+        priorityLevel: Joi.string().trim().required().messages({
+            'string.empty': 'Priority level is required',
+            'any.required': 'Priority level is required'
+        })
+    });
+
+    // organizationShema
     static organizationSchema = Joi.object({
         name: Joi.string().trim().required().messages({
             'string.empty': 'Organization name is required',
@@ -114,6 +154,7 @@ class UserValidation {
             'any.required': 'Vehicle categories are required'
         })
     });
+
     static validate = (data: any, schema = this.registrationSchema) => {
         const { error, value } = schema.validate(data, {
             abortEarly: false, // collect all errors not just the first one
@@ -127,7 +168,7 @@ class UserValidation {
                 feild: err.path[0],
                 message: err.message
                     .replace(/^"(.*)" /, '') // Remove quotes from the start of the message
-                    .replace(/\s*is\s*/, '') // Remove 'is' from the message
+                    .replace(/\s*is\s*/, ' ') // Remove 'is' from the message
             }));
 
             throw new ValidationError('Validation Failed', validationError);

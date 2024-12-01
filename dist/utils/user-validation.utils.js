@@ -48,6 +48,38 @@ UserValidation.registrationSchema = joi_1.default.object({
         'any.required': 'Confirm password is required'
     })
 });
+UserValidation.procurementSchema = joi_1.default.object({
+    orderNumber: joi_1.default.string().trim().optional(), // Since it's not marked as required in the original schema
+    procurementType: joi_1.default.string().trim().required().messages({
+        'string.empty': 'Procurement type is required',
+        'any.required': 'Procurement type is required'
+    }),
+    vendorName: joi_1.default.string().trim().required().messages({
+        'string.empty': 'Vendor name is required',
+        'any.required': 'Vendor name is required'
+    }),
+    description: joi_1.default.string().trim().required().messages({
+        'string.empty': 'Description is required',
+        'any.required': 'Description is required'
+    }),
+    quantity: joi_1.default.number().integer().min(1).required().messages({
+        'number.base': 'Quantity must be a number',
+        'number.integer': 'Quantity must be a whole number',
+        'number.min': 'Quantity must be at least 1',
+        'any.required': 'Quantity is required'
+    }),
+    deliveryDate: joi_1.default.date().iso().optional(), // Optional as it was not marked as required in original schema
+    budget: joi_1.default.number().min(0).required().messages({
+        'number.base': 'Budget must be a number',
+        'number.min': 'Budget cannot be negative',
+        'any.required': 'Budget is required'
+    }),
+    priorityLevel: joi_1.default.string().trim().required().messages({
+        'string.empty': 'Priority level is required',
+        'any.required': 'Priority level is required'
+    })
+});
+// organizationShema
 UserValidation.organizationSchema = joi_1.default.object({
     name: joi_1.default.string().trim().required().messages({
         'string.empty': 'Organization name is required',
@@ -133,7 +165,7 @@ UserValidation.validate = (data, schema = _a.registrationSchema) => {
             feild: err.path[0],
             message: err.message
                 .replace(/^"(.*)" /, '') // Remove quotes from the start of the message
-                .replace(/\s*is\s*/, '') // Remove 'is' from the message
+                .replace(/\s*is\s*/, ' ') // Remove 'is' from the message
         }));
         throw new ValidationError('Validation Failed', validationError);
     }
