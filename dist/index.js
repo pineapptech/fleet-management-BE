@@ -21,7 +21,7 @@ const procurement_route_1 = __importDefault(require("./routes/procurement.route"
 (0, dotenv_1.configDotenv)();
 (0, db_1.default)();
 const corsOptions = {
-    origin: '*', // Replace with your frontend domain https://fleet-management-fe.vercel.app
+    origin: ['*', 'https://fleet-management-fe.vercel.app'], // Replace with your frontend domain https://fleet-management-fe.vercel.app
     credentials: true,
     optionsSuccessStatus: 200
 };
