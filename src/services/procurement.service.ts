@@ -35,11 +35,20 @@ export class ProcurementService {
         }
     };
 
-    // public updateProcurement = async (updatedData:IProcurement, procurementId: string): Promise<IProcurement> => {
-    //     try {
-    //         const procurement = await Procurement.findByIdAndUpdate({_id: procurementId})
-    //     } catch (error) {
+    public updateProcurement = async (updatedData: Partial<IProcurement>, procurementId: string): Promise<IProcurement | null> => {
+        try {
+            const procurement = await Procurement.findByIdAndUpdate(procurementId, updatedData, {
+                new: true,
+                runValidators: true
+            });
 
-    //     }
-    // }
+            if (!procurement) {
+                throw new Error(`Could not find the Procurement`);
+            }
+            return procurement;
+        } catch (error) {
+            process.env.NODE_ENV !== 'production' ? console.error('Error updating procurement:', error) : '';
+            throw error;
+        }
+    };
 }

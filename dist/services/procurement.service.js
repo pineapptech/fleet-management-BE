@@ -45,12 +45,22 @@ class ProcurementService {
                 throw new Error(error.message);
             }
         });
-        // public updateProcurement = async (updatedData:IProcurement, procurementId: string): Promise<IProcurement> => {
-        //     try {
-        //         const procurement = await Procurement.findByIdAndUpdate({_id: procurementId})
-        //     } catch (error) {
-        //     }
-        // }
+        this.updateProcurement = (updatedData, procurementId) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurement = yield procurement_model_1.default.findByIdAndUpdate(procurementId, updatedData, {
+                    new: true,
+                    runValidators: true
+                });
+                if (!procurement) {
+                    throw new Error(`Could not find the Procurement`);
+                }
+                return procurement;
+            }
+            catch (error) {
+                process.env.NODE_ENV !== 'production' ? console.error('Error updating procurement:', error) : '';
+                throw error;
+            }
+        });
     }
 }
 exports.ProcurementService = ProcurementService;
