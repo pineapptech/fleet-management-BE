@@ -18,7 +18,7 @@ configDotenv();
 connectDB();
 
 const corsOptions = {
-    origin: ['*', 'https://fleet-management-fe.vercel.app'], // Replace with your frontend domain https://fleet-management-fe.vercel.app
+    origin: ['*', 'https://fleet-management-fe.vercel.app', 'http://localhost:3000'], // Replace with your frontend domain https://fleet-management-fe.vercel.app
     credentials: true,
     optionsSuccessStatus: 200
 };
