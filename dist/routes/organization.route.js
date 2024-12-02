@@ -9,4 +9,5 @@ const verify_token_middleware_1 = __importDefault(require("../middlewares/verify
 const multer_middleware_1 = __importDefault(require("../middlewares/multer.middleware"));
 const orgRouter = (0, express_1.Router)();
 orgRouter.route('/create-org').post(verify_token_middleware_1.default, multer_middleware_1.default.upload.single('logo'), organization_controller_1.default.createOrganization);
+orgRouter.route('/get-organization').get(verify_token_middleware_1.default, organization_controller_1.default.getUserOrganizations);
 exports.default = orgRouter;

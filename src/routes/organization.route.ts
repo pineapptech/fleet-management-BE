@@ -6,5 +6,6 @@ import multerMiddleware from '../middlewares/multer.middleware';
 const orgRouter = Router();
 
 orgRouter.route('/create-org').post(verifyTokenFromCookie, multerMiddleware.upload.single('logo'), organizationController.createOrganization);
+orgRouter.route('/get-organization').get(verifyTokenFromCookie, organizationController.getUserOrganizations);
 
 export default orgRouter;

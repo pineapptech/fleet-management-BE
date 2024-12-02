@@ -7,4 +7,5 @@ const procurementRouter = (0, express_1.Router)();
 const procurementService = new procurement_service_1.ProcurementService();
 const procurementController = new procurement_controller_1.ProcurementController(procurementService);
 procurementRouter.route('/').post(procurementController.create).get(procurementController.getAllProcurements);
+procurementRouter.route('/:id').get(procurementController.getProcurement).patch(procurementController.updateProcurement).delete(procurementController.deleteProcurment);
 exports.default = procurementRouter;

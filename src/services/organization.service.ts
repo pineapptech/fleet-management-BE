@@ -32,9 +32,9 @@ class OrganizationService {
     };
 
     // Optional: Add method to get organizations created by a user
-    public getOrganizationsByUser = async (userId: string): Promise<IOrganization[]> => {
+    public getOrganizationsByUser = async (userId: string): Promise<IOrganization | null> => {
         try {
-            return await Organization.find({ createdBy: userId }).populate('createdBy', 'name email'); // Optional: populate creator details
+            return await Organization.findOne({ createdBy: userId }).populate('createdBy', 'name email'); // Optional: populate creator details
         } catch (error) {
             throw error;
         }

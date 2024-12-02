@@ -81,6 +81,76 @@ class ProcurementController {
                 });
             }
         });
+        this.getProcurement = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurement = yield this.procurementService.getProcurement(req.params.id);
+                if (!procurement) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'Procurement not found'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    data: [procurement]
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
+        this.updateProcurement = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurement = yield this.procurementService.updateProcurement(req.body, req.params.id);
+                if (!procurement) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'Procurement Not Found'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    message: 'Procurement Updated Successfully',
+                    data: procurement
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
+        this.deleteProcurment = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurement = yield this.procurementService.deleteProcurement(req.params.id);
+                if (!procurement) {
+                    res.status(404).json({
+                        status: false,
+                        message: 'Procurement not found'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    message: 'Procurement deleted successfully'
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
         this.procurementService = procurementService;
     }
 }

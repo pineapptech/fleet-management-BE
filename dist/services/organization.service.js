@@ -41,7 +41,7 @@ class OrganizationService {
         // Optional: Add method to get organizations created by a user
         this.getOrganizationsByUser = (userId) => __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield organization_model_1.default.find({ createdBy: userId }).populate('createdBy', 'name email'); // Optional: populate creator details
+                return yield organization_model_1.default.findOne({ createdBy: userId }).populate('createdBy', 'name email'); // Optional: populate creator details
             }
             catch (error) {
                 throw error;

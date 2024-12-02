@@ -52,10 +52,11 @@ class OrganizationController {
         this.getUserOrganizations = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!req.user) {
-                    return res.status(401).json({
+                    res.status(401).json({
                         status: false,
                         message: 'Unauthorized'
                     });
+                    return;
                 }
                 const organizations = yield organization_service_1.default.getOrganizationsByUser(req.user._id);
                 res.status(200).json({

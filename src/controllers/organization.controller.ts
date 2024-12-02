@@ -43,10 +43,11 @@ class OrganizationController {
     public getUserOrganizations = async (req: Request, res: Response) => {
         try {
             if (!req.user) {
-                return res.status(401).json({
+                res.status(401).json({
                     status: false,
                     message: 'Unauthorized'
                 });
+                return;
             }
 
             const organizations = await OrganizationService.getOrganizationsByUser(req.user._id);

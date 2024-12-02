@@ -82,4 +82,76 @@ export class ProcurementController {
             });
         }
     };
+
+    public getProcurement = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const procurement = await this.procurementService.getProcurement(req.params.id);
+
+            if (!procurement) {
+                res.status(404).json({
+                    status: false,
+                    message: 'Procurement not found'
+                });
+                return;
+            }
+
+            res.status(200).json({
+                status: true,
+                data: [procurement]
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
+
+    public updateProcurement = async (req: Request, res: Response) => {
+        try {
+            const procurement = await this.procurementService.updateProcurement(req.body, req.params.id);
+            if (!procurement) {
+                res.status(404).json({
+                    status: false,
+                    message: 'Procurement Not Found'
+                });
+                return;
+            }
+            res.status(200).json({
+                status: true,
+                message: 'Procurement Updated Successfully',
+                data: procurement
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
+
+    public deleteProcurment = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const procurement = await this.procurementService.deleteProcurement(req.params.id);
+            if (!procurement) {
+                res.status(404).json({
+                    status: false,
+                    message: 'Procurement not found'
+                });
+                return;
+            }
+            res.status(200).json({
+                status: true,
+                message: 'Procurement deleted successfully'
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
 }
