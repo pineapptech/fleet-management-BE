@@ -61,6 +61,19 @@ class ProcurementService {
                 throw error;
             }
         });
+        this.deleteProcurement = (procurmentId) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurement = yield procurement_model_1.default.findByIdAndDelete(procurmentId);
+                if (!procurement) {
+                    throw new Error('No Procurement found..');
+                }
+                return true;
+            }
+            catch (error) {
+                process.env.NODE_ENV !== 'production' ? console.error('Error updating procurement:', error) : '';
+                throw error;
+            }
+        });
     }
 }
 exports.ProcurementService = ProcurementService;

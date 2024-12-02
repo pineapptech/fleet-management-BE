@@ -51,4 +51,17 @@ export class ProcurementService {
             throw error;
         }
     };
+
+    public deleteProcurement = async (procurmentId: string): Promise<boolean> => {
+        try {
+            const procurement = await Procurement.findByIdAndDelete(procurmentId);
+            if (!procurement) {
+                throw new Error('No Procurement found..');
+            }
+            return true;
+        } catch (error) {
+            process.env.NODE_ENV !== 'production' ? console.error('Error updating procurement:', error) : '';
+            throw error;
+        }
+    };
 }

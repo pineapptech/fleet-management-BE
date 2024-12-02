@@ -20,7 +20,9 @@ connectDB();
 const corsOptions = {
     origin: ['*', 'https://fleet-management-fe.vercel.app', 'http://localhost:3000'], // Replace with your frontend domain https://fleet-management-fe.vercel.app
     credentials: true,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 const app: Application = express();
 

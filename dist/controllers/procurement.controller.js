@@ -58,6 +58,29 @@ class ProcurementController {
                 });
             }
         });
+        this.getAllProcurements = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const procurements = yield this.procurementService.getAllProcurements();
+                if (procurements.length === 0) {
+                    res.status(200).json({
+                        status: false,
+                        message: 'No procurements Found...'
+                    });
+                    return;
+                }
+                res.status(200).json({
+                    status: true,
+                    data: procurements
+                });
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
         this.procurementService = procurementService;
     }
 }

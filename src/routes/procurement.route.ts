@@ -7,6 +7,6 @@ const procurementRouter = Router();
 const procurementService = new ProcurementService();
 const procurementController = new ProcurementController(procurementService);
 
-procurementRouter.route('/').post(procurementController.create);
+procurementRouter.route('/').post(procurementController.create).get(procurementController.getAllProcurements);
 
 export default procurementRouter;

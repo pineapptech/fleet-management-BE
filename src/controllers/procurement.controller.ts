@@ -58,4 +58,28 @@ export class ProcurementController {
             });
         }
     };
+
+    public getAllProcurements = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const procurements = await this.procurementService.getAllProcurements();
+            if (procurements.length === 0) {
+                res.status(200).json({
+                    status: false,
+                    message: 'No procurements Found...'
+                });
+                return;
+            }
+
+            res.status(200).json({
+                status: true,
+                data: procurements
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
 }
