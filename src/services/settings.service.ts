@@ -14,10 +14,10 @@ export class SettingsService {
         });
     };
 
-    public getUserData = async (UserId: string): Promise<IUser | null> => {
-        const user = await User.findById(UserId);
-        if (!user) {
-            throw new NotFoundError(`User ${UserId} not found`);
+    public getUserData = async (): Promise<IUser[]> => {
+        const user = await User.find({ role: 'user' });
+        if (user.length === 0) {
+            throw new NotFoundError(`User not found`);
         }
         return user;
     };

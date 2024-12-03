@@ -8,6 +8,6 @@ import AdminMiddleware from '../middlewares/admin-access.middleware';
 const settingsService = new SettingsService();
 const settings = new SettingsController(settingsService);
 
-settngsRoute.route('/').post(verifyToken, AdminMiddleware.checkAdminAccess, settings.createUser);
+settngsRoute.route('/').post(verifyToken, AdminMiddleware.checkAdminAccess, settings.createUser).get(verifyToken, AdminMiddleware.checkAdminAccess, settings.getUsers);
 
 export default settngsRoute;

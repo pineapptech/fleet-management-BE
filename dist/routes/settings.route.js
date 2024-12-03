@@ -11,5 +11,5 @@ const verify_token_middleware_1 = __importDefault(require("../middlewares/verify
 const admin_access_middleware_1 = __importDefault(require("../middlewares/admin-access.middleware"));
 const settingsService = new settings_service_1.SettingsService();
 const settings = new settings_controller_1.default(settingsService);
-settngsRoute.route('/').post(verify_token_middleware_1.default, admin_access_middleware_1.default.checkAdminAccess, settings.createUser);
+settngsRoute.route('/').post(verify_token_middleware_1.default, admin_access_middleware_1.default.checkAdminAccess, settings.createUser).get(verify_token_middleware_1.default, admin_access_middleware_1.default.checkAdminAccess, settings.getUsers);
 exports.default = settngsRoute;

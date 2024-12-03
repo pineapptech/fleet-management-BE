@@ -83,7 +83,9 @@ class UserController {
                 status: true,
                 data: [
                     {
-                        email: user.email
+                        fullname: user?.fullname,
+                        email: user.email,
+                        role: user.role
                     }
                 ]
             });

@@ -25,10 +25,10 @@ class SettingsService {
                 return user;
             });
         });
-        this.getUserData = (UserId) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield user_model_1.default.findById(UserId);
-            if (!user) {
-                throw new CustomError_1.NotFoundError(`User ${UserId} not found`);
+        this.getUserData = () => __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_model_1.default.find({ role: 'user' });
+            if (user.length === 0) {
+                throw new CustomError_1.NotFoundError(`User not found`);
             }
             return user;
         });

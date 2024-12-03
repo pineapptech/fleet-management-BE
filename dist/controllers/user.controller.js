@@ -107,7 +107,9 @@ class UserController {
                     status: true,
                     data: [
                         {
-                            email: user.email
+                            fullname: user === null || user === void 0 ? void 0 : user.fullname,
+                            email: user.email,
+                            role: user.role
                         }
                     ]
                 });
