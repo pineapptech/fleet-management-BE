@@ -13,6 +13,7 @@ import cors from 'cors';
 import orgRouter from './routes/organization.route';
 import cookieParser from 'cookie-parser';
 import procurementRouter from './routes/procurement.route';
+import { CustomError } from './error/CustomError';
 
 configDotenv();
 connectDB();
@@ -41,6 +42,12 @@ app.use('/api/v1/maintainers', maintenanceRoute);
 app.use('/api/v1/assigned', assignedRouter);
 app.use('/api/v1/organizations', orgRouter);
 app.use('/api/v1/procurement', procurementRouter);
+
+// DEFAULT ROUTE
+app.use('*', (req: Request, res: Response, next: NextFunction) => {
+    const error = new CustomError(`Oops...., It seems like the Route ${req.originalUrl} You are looking for does not Exist`, 404);
+    next(error);
+});
 
 app.use(globalError);
 app.listen(port, () => console.log(`Listening on ${port}`));

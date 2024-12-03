@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehicleController = void 0;
 const vehicle_service_1 = require("../services/vehicle.service");
 const image_middleware_1 = __importDefault(require("../middlewares/image.middleware"));
+const CustomError_1 = require("../error/CustomError");
 class VehicleController {
     constructor() {
         this.uploadVehicleData = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
@@ -60,6 +61,102 @@ class VehicleController {
                     status: false,
                     message: error.message,
                     stack: process.env.NODE_ENV !== 'production' ? JSON.stringify(error.stack) : ''
+                });
+            }
+        });
+        this.getVehicle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const vehicle = yield this.vehicleService.getVehicle(req.params.id);
+                res.status(200).json({
+                    status: true,
+                    data: vehicle
+                });
+            }
+            catch (error) {
+                if (error instanceof CustomError_1.ValidationError) {
+                    res.status(400).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                if (error instanceof CustomError_1.NotFoundError) {
+                    res.status(404).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                console.error(error);
+                res.status(500).json({
+                    status: false,
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
+        this.updateVehicle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const vehicle = yield this.vehicleService.updateVehicle(req.body, req.params.id);
+                res.status(200).json({
+                    status: true,
+                    message: `Vehicle Updated successfully`,
+                    data: vehicle
+                });
+            }
+            catch (error) {
+                if (error instanceof CustomError_1.ValidationError) {
+                    res.status(400).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                if (error instanceof CustomError_1.NotFoundError) {
+                    res.status(404).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                // Log unexpected errors
+                console.error(error);
+                res.status(500).json({
+                    status: false,
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
+        this.deleteVehicle = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const vehilce = yield this.vehicleService.deleteVehicle(req.params.id);
+                res.status(200).json({
+                    status: true,
+                    message: `Vehicle ${vehilce} deleted successfully`
+                });
+            }
+            catch (error) {
+                if (error instanceof CustomError_1.ValidationError) {
+                    res.status(400).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                if (error instanceof CustomError_1.NotFoundError) {
+                    res.status(404).json({
+                        status: false,
+                        message: error.message
+                    });
+                    return;
+                }
+                // Log unexpected errors
+                console.error(error);
+                res.status(500).json({
+                    status: false,
+                    message: 'Internal server error',
+                    error: error instanceof Error ? error.message : 'Unknown error'
                 });
             }
         });

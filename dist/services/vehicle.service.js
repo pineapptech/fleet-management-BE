@@ -16,6 +16,9 @@ exports.VehicleService = void 0;
 const cloudinary_1 = require("cloudinary");
 const vehicle_model_1 = __importDefault(require("../models/vehicle.model"));
 const dotenv_1 = require("dotenv");
+const generateVehicleID_1 = require("../utils/generateVehicleID");
+const CustomError_1 = require("../error/CustomError");
+const mongoose_1 = __importDefault(require("mongoose"));
 (0, dotenv_1.configDotenv)();
 cloudinary_1.v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -32,6 +35,42 @@ class VehicleService {
             catch (error) {
                 throw new Error(`${error.message}`);
             }
+        });
+        this.updateVehicle = (updatedData, vehicleId) => __awaiter(this, void 0, void 0, function* () {
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is required for this operation');
+            }
+            const vehicle = yield vehicle_model_1.default.findByIdAndUpdate(vehicleId, updatedData, {
+                new: true,
+                runValidators: true
+            });
+            if (!vehicle) {
+                throw new CustomError_1.NotFoundError('Vehicle not found');
+            }
+            return vehicle;
+        });
+        this.getVehicle = (vehicleId) => __awaiter(this, void 0, void 0, function* () {
+            if (!mongoose_1.default.Types.ObjectId.isValid(vehicleId)) {
+                throw new Error(`Invalid ID format: ${vehicleId}`);
+            }
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is Required');
+            }
+            const vehicle = yield vehicle_model_1.default.findById({ _id: vehicleId });
+            if (!vehicle) {
+                throw new CustomError_1.NotFoundError('Vehicle not found');
+            }
+            return vehicle;
+        });
+        this.deleteVehicle = (vehicleId) => __awaiter(this, void 0, void 0, function* () {
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is Required');
+            }
+            const vehicle = yield vehicle_model_1.default.findByIdAndDelete(vehicleId);
+            if (!vehicle) {
+                throw new CustomError_1.NotFoundError('Vehicle not found');
+            }
+            return true;
         });
     }
     // Helper function to validate files
@@ -70,8 +109,9 @@ class VehicleService {
                 // Upload images to Cloudinary
                 const vehicleImgUrl = yield this.uploadToCloudinary(files.vehicle_img[0].buffer, 'vehicle_img');
                 const procurementImgUrl = yield this.uploadToCloudinary(files.procurement_img[0].buffer, 'procurement_img');
+                const vehicle_id = (0, generateVehicleID_1.generateVehicleID)();
                 // Create a new vehicle entry
-                const vehicle = yield vehicle_model_1.default.create(Object.assign({ image: vehicleImgUrl, procurement_img: procurementImgUrl }, vehicleData));
+                const vehicle = yield vehicle_model_1.default.create(Object.assign({ image: vehicleImgUrl, procurement_img: procurementImgUrl, vehicle_id }, vehicleData));
                 return vehicle;
             }
             catch (error) {

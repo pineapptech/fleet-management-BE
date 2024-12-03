@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { VehicleService } from '../services/vehicle.service';
 import multipleUpload from '../middlewares/image.middleware';
+import { NotFoundError, ValidationError } from '../error/CustomError';
 
 export class VehicleController {
     private vehicleService: VehicleService;
@@ -54,6 +55,112 @@ export class VehicleController {
                 status: false,
                 message: error.message,
                 stack: process.env.NODE_ENV !== 'production' ? JSON.stringify(error.stack) : ''
+            });
+        }
+    };
+
+    public getVehicle = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const vehicle = await this.vehicleService.getVehicle(req.params.id);
+
+            res.status(200).json({
+                status: true,
+                data: vehicle
+            });
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                res.status(400).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            if (error instanceof NotFoundError) {
+                res.status(404).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            console.error(error);
+
+            res.status(500).json({
+                status: false,
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
+
+    public updateVehicle = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const vehicle = await this.vehicleService.updateVehicle(req.body, req.params.id);
+            res.status(200).json({
+                status: true,
+                message: `Vehicle Updated successfully`,
+                data: vehicle
+            });
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                res.status(400).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            if (error instanceof NotFoundError) {
+                res.status(404).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            // Log unexpected errors
+            console.error(error);
+
+            res.status(500).json({
+                status: false,
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
+            });
+        }
+    };
+
+    public deleteVehicle = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const vehilce = await this.vehicleService.deleteVehicle(req.params.id);
+            res.status(200).json({
+                status: true,
+                message: `Vehicle ${vehilce} deleted successfully`
+            });
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                res.status(400).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            if (error instanceof NotFoundError) {
+                res.status(404).json({
+                    status: false,
+                    message: error.message
+                });
+                return;
+            }
+
+            // Log unexpected errors
+            console.error(error);
+
+            res.status(500).json({
+                status: false,
+                message: 'Internal server error',
+                error: error instanceof Error ? error.message : 'Unknown error'
             });
         }
     };

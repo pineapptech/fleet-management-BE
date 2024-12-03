@@ -18,6 +18,7 @@ const cors_1 = __importDefault(require("cors"));
 const organization_route_1 = __importDefault(require("./routes/organization.route"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const procurement_route_1 = __importDefault(require("./routes/procurement.route"));
+const CustomError_1 = require("./error/CustomError");
 (0, dotenv_1.configDotenv)();
 (0, db_1.default)();
 const corsOptions = {
@@ -42,5 +43,10 @@ app.use('/api/v1/maintainers', maintenance_route_1.default);
 app.use('/api/v1/assigned', assign_route_1.default);
 app.use('/api/v1/organizations', organization_route_1.default);
 app.use('/api/v1/procurement', procurement_route_1.default);
+// DEFAULT ROUTE
+app.use('*', (req, res, next) => {
+    const error = new CustomError_1.CustomError(`Oops...., It seems like the Route ${req.originalUrl} You are looking for does not Exist`, 404);
+    next(error);
+});
 app.use(global_error_middleware_1.globalError);
 app.listen(port, () => console.log(`Listening on ${port}`));

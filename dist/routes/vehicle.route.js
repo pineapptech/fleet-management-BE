@@ -9,4 +9,5 @@ const vehicleRoute = express_1.default.Router();
 const vehicleController = new vehicle_controller_1.VehicleController();
 vehicleRoute.route('/add-vehicle').post(vehicleController.uploadVehicleData);
 vehicleRoute.route('/vehicle-record').get(vehicleController.getVehicles);
+vehicleRoute.route('/vehicle-record/:id').get(vehicleController.getVehicle).patch(vehicleController.updateVehicle).delete(vehicleController.deleteVehicle);
 exports.default = vehicleRoute;
