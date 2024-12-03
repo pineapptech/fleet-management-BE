@@ -2,6 +2,7 @@ import cloudinary from '../config/cloudinary.config';
 import IAssign from '../interfaces/assign.interface';
 import fs from 'fs';
 import Assign from '../models/assign.model';
+import { NotFoundError, ValidationError } from '../error/CustomError';
 
 export class AssignService {
     public async uploadFile(file: Express.Multer.File, data: Partial<IAssign>): Promise<IAssign> {
@@ -25,5 +26,44 @@ export class AssignService {
 
     public async getAllAssignedVehicles(): Promise<IAssign[]> {
         return await Assign.find();
+    }
+
+    public async getAssignedVehicle(vehicleId: number): Promise<IAssign | null> {
+        if (!vehicleId) {
+            throw new ValidationError('Vehicle ID is required');
+        }
+        const vehicle = await Assign.findById(vehicleId);
+
+        if (!vehicle) {
+            throw new ValidationError('Vehicle Not Found');
+        }
+
+        return vehicle;
+    }
+
+    public async updateAssignVehicle(updatedData: Partial<IAssign>, vehicleId: string): Promise<IAssign | null> {
+        if (!vehicleId) {
+            throw new ValidationError('Vehicle ID is required');
+        }
+        const vehicle = await Assign.findByIdAndUpdate(vehicleId, updatedData, {
+            new: true,
+            runValidators: true
+        });
+
+        if (!vehicle) {
+            throw new NotFoundError('Vehicle Not Found');
+        }
+        return vehicle;
+    }
+
+    public async deleteVehicle(vehicleId: string): Promise<IAssign | null> {
+        if (!vehicleId) {
+            throw new ValidationError('Vehicle ID is required');
+        }
+        const vehicle = await Assign.findByIdAndDelete(vehicleId);
+        if (!vehicle) {
+            throw new NotFoundError('Vehicle Not Found');
+        }
+        return vehicle;
     }
 }

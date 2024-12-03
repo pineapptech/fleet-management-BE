@@ -16,6 +16,7 @@ exports.AssignService = void 0;
 const cloudinary_config_1 = __importDefault(require("../config/cloudinary.config"));
 const fs_1 = __importDefault(require("fs"));
 const assign_model_1 = __importDefault(require("../models/assign.model"));
+const CustomError_1 = require("../error/CustomError");
 class AssignService {
     uploadFile(file, data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -37,6 +38,45 @@ class AssignService {
     getAllAssignedVehicles() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield assign_model_1.default.find();
+        });
+    }
+    getAssignedVehicle(vehicleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is required');
+            }
+            const vehicle = yield assign_model_1.default.findById(vehicleId);
+            if (!vehicle) {
+                throw new CustomError_1.ValidationError('Vehicle Not Found');
+            }
+            return vehicle;
+        });
+    }
+    updateAssignVehicle(updatedData, vehicleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is required');
+            }
+            const vehicle = yield assign_model_1.default.findByIdAndUpdate(vehicleId, updatedData, {
+                new: true,
+                runValidators: true
+            });
+            if (!vehicle) {
+                throw new CustomError_1.NotFoundError('Vehicle Not Found');
+            }
+            return vehicle;
+        });
+    }
+    deleteVehicle(vehicleId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!vehicleId) {
+                throw new CustomError_1.ValidationError('Vehicle ID is required');
+            }
+            const vehicle = yield assign_model_1.default.findByIdAndDelete(vehicleId);
+            if (!vehicle) {
+                throw new CustomError_1.NotFoundError('Vehicle Not Found');
+            }
+            return vehicle;
         });
     }
 }
