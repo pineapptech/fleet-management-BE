@@ -8,6 +8,10 @@ const userSchema = new Schema<IUser>(
             trim: true,
             unique: true
         },
+        fullname: {
+            type: String,
+            trim: true
+        },
         phone: {
             type: String,
             trim: true

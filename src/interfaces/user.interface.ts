@@ -6,6 +6,7 @@ export enum Erole {
 }
 interface IUser extends Document {
     _id: mongoose.Types.ObjectId;
+    fullname: string;
     email: string;
     phone: string;
     password: string;

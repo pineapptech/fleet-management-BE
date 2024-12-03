@@ -99,6 +99,8 @@ class UserController {
     public logout = async (req: Request, res: Response) => {
         res.cookie('jwt', '', {
             httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none', // Matching your original cookie configuration
             expires: new Date(0)
         });
         res.status(200).json({

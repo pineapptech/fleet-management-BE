@@ -14,6 +14,7 @@ import orgRouter from './routes/organization.route';
 import cookieParser from 'cookie-parser';
 import procurementRouter from './routes/procurement.route';
 import { CustomError } from './error/CustomError';
+import settngsRoute from './routes/settings.route';
 
 configDotenv();
 connectDB();
@@ -42,6 +43,7 @@ app.use('/api/v1/maintainers', maintenanceRoute);
 app.use('/api/v1/assigned', assignedRouter);
 app.use('/api/v1/organizations', orgRouter);
 app.use('/api/v1/procurement', procurementRouter);
+app.use('/api/v1/settings', settngsRoute);
 
 // DEFAULT ROUTE
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
