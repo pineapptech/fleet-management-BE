@@ -44,7 +44,8 @@ class UserController {
             res.status(201).json({
                 status: true,
                 message: `User with this email: ${user.email} created successfully`,
-                id: user._id
+                email: user.email,
+                fullname: user.fullname
             });
         } catch (error: any | unknown) {
             if (error instanceof ValidationError) {
