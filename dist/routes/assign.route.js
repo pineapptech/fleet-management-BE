@@ -8,4 +8,5 @@ const multer_middleware_1 = __importDefault(require("../middlewares/multer.middl
 const assign_controller_1 = __importDefault(require("../controllers/assign.controller"));
 const assignedRouter = (0, express_1.Router)();
 assignedRouter.route('/assign-vehicle').post(multer_middleware_1.default.upload.single('driver_img_url'), assign_controller_1.default.assignVehicle).get(assign_controller_1.default.getAllAssignedVehicles);
+assignedRouter.route('/assign-vehicle/:id').get(assign_controller_1.default.getAssignedVehicle).patch(assign_controller_1.default.updateAssignedVehilce).delete(assign_controller_1.default.deleteAssinedVehilce);
 exports.default = assignedRouter;

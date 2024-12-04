@@ -93,6 +93,7 @@ class SettingsController {
                 });
             }
         });
+        this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () { });
         this.settingsService = settingsService;
     }
 }

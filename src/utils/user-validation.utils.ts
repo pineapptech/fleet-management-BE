@@ -2,6 +2,10 @@ import Joi from 'joi';
 
 class UserValidation {
     static registrationSchema = Joi.object({
+        fullname: Joi.string().trim().required().messages({
+            'string.required': 'Fullname is required'
+        }),
+
         email: Joi.string()
             .email({ tlds: { allow: ['com', 'net', 'org', 'edu'] } })
             .trim()

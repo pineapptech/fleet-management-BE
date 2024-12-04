@@ -11,6 +11,9 @@ class UserValidation {
 exports.UserValidation = UserValidation;
 _a = UserValidation;
 UserValidation.registrationSchema = joi_1.default.object({
+    fullname: joi_1.default.string().trim().required().messages({
+        'string.required': 'Fullname is required'
+    }),
     email: joi_1.default.string()
         .email({ tlds: { allow: ['com', 'net', 'org', 'edu'] } })
         .trim()

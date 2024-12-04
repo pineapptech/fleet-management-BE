@@ -28,7 +28,7 @@ export class AssignService {
         return await Assign.find();
     }
 
-    public async getAssignedVehicle(vehicleId: number): Promise<IAssign | null> {
+    public async getAssignedVehicle(vehicleId: string): Promise<IAssign | null> {
         if (!vehicleId) {
             throw new ValidationError('Vehicle ID is required');
         }

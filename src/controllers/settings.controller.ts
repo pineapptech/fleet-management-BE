@@ -95,6 +95,8 @@ class SettingsController {
             });
         }
     };
+
+    public deleteUser = async (req: Request, res: Response) => {};
 }
 
 export default SettingsController;
