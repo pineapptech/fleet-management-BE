@@ -2,6 +2,7 @@ import IUser from '../interfaces/user.interface';
 import bcrypt from 'bcryptjs';
 import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
+import { NotFoundError, ValidationError } from '../error/CustomError';
 class UserService {
     async createUserService(data: IUser): Promise<IUser> {
         const { fullname, email, phone, password, confirmPassword, role } = data;
@@ -31,6 +32,13 @@ class UserService {
             throw new Error(`Email or Password is Incorrect`);
         }
 
+        return user;
+    }
+
+    async getUserById(id: string): Promise<IUser | null> {
+        if (!id) throw new ValidationError(`ID is required`);
+        const user = await User.findById({ _id: id });
+        if (!user) throw new NotFoundError(`User ${id} not found`);
         return user;
     }
 }

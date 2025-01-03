@@ -28,10 +28,37 @@ class MaintenanceService {
         }
     };
 
-    public getVehicleMaintenence = async (): Promise<IMaintenance[]> => {
+    public getVehicleMaintenance = async (): Promise<IMaintenance[]> => {
         try {
             const maintainedVehicle = await Maintenance.find();
             return maintainedVehicle;
+        } catch (error: any) {
+            throw new Error(`${error.message}`);
+        }
+    };
+
+    public getVehicleMaintenanceById = async (id: string): Promise<IMaintenance | null> => {
+        try {
+            const maintainedVehicle = await Maintenance.findById(id);
+            return maintainedVehicle;
+        } catch (error: any) {
+            throw new Error(`${error.message}`);
+        }
+    };
+
+    public updateVehicleMaintenance = async (id: string, data: Partial<IMaintenance>): Promise<IMaintenance | null> => {
+        try {
+            const updatedVehicle = await Maintenance.findByIdAndUpdate(id, data, { new: true });
+            return updatedVehicle;
+        } catch (error: any) {
+            throw new Error(`${error.message}`);
+        }
+    };
+
+    public deleteVehicleMaintenance = async (id: string): Promise<IMaintenance | null> => {
+        try {
+            const deletedVehicle = await Maintenance.findByIdAndDelete(id);
+            return deletedVehicle;
         } catch (error: any) {
             throw new Error(`${error.message}`);
         }
