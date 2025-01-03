@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_model_1 = __importDefault(require("../models/user.model"));
+const CustomError_1 = require("../error/CustomError");
 class UserService {
     createUserService(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,6 +44,16 @@ class UserService {
             if (!validPassword) {
                 throw new Error(`Email or Password is Incorrect`);
             }
+            return user;
+        });
+    }
+    getUserById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!id)
+                throw new CustomError_1.ValidationError(`ID is required`);
+            const user = yield user_model_1.default.findById({ _id: id });
+            if (!user)
+                throw new CustomError_1.NotFoundError(`User ${id} not found`);
             return user;
         });
     }

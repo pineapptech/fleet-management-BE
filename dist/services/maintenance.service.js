@@ -35,10 +35,37 @@ class MaintenanceService {
                 throw error;
             }
         });
-        this.getVehicleMaintenence = () => __awaiter(this, void 0, void 0, function* () {
+        this.getVehicleMaintenance = () => __awaiter(this, void 0, void 0, function* () {
             try {
                 const maintainedVehicle = yield maintenance_model_1.default.find();
                 return maintainedVehicle;
+            }
+            catch (error) {
+                throw new Error(`${error.message}`);
+            }
+        });
+        this.getVehicleMaintenanceById = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const maintainedVehicle = yield maintenance_model_1.default.findById(id);
+                return maintainedVehicle;
+            }
+            catch (error) {
+                throw new Error(`${error.message}`);
+            }
+        });
+        this.updateVehicleMaintenance = (id, data) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const updatedVehicle = yield maintenance_model_1.default.findByIdAndUpdate(id, data, { new: true });
+                return updatedVehicle;
+            }
+            catch (error) {
+                throw new Error(`${error.message}`);
+            }
+        });
+        this.deleteVehicleMaintenance = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const deletedVehicle = yield maintenance_model_1.default.findByIdAndDelete(id);
+                return deletedVehicle;
             }
             catch (error) {
                 throw new Error(`${error.message}`);
